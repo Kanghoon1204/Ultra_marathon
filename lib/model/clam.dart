@@ -1,17 +1,16 @@
 import 'dart:math';
+import 'package:flame/collisions.dart';
 import 'package:flame/geometry.dart';
-import 'package:infinity_alive/global.dart';
+import 'package:infinity_alive/config/global.dart';
 import 'package:flame/components.dart';
-import 'package:infinity_alive/spaceship.dart';
+import 'package:infinity_alive/model/player.dart';
 
-class Missile extends SpriteComponent with HasHitboxes, Collidable {
-  Missile() : super(size: Vector2.all(4));
+class Clam extends SpriteComponent with HasGameRef, CollisionCallbacks {
+  Clam() : super(size: Vector2.all(16));
 
-  late Sprite fast;
-  late Sprite normal;
+  late Sprite clam;
 
   bool isLoadedFirst = false;
-  bool isFast = false;
   Vector2 startPosition = Vector2(0, 0);
   Vector2 endPosition = Vector2(0, 0);
 
@@ -19,13 +18,12 @@ class Missile extends SpriteComponent with HasHitboxes, Collidable {
 
   @override
   Future<void>? onLoad() async {
-    fast = await Sprite.load('missile_fast.png');
-    normal = await Sprite.load('missile_normal.png');
+    clam = await Sprite.load('clam.png');
 
     reloadSprite();
 
-    final hitbox = HitboxRectangle(relation: Vector2.all(1));
-    addHitbox(hitbox);
+    final hitbox = RectangleHitbox();
+    add(hitbox);
 
     return super.onLoad();
   }
@@ -54,12 +52,9 @@ class Missile extends SpriteComponent with HasHitboxes, Collidable {
 
     var diff = endPosition - startPosition;
     double speed = dt * Global.gameSpeed;
-    if (isFast) {
-      speed *= 1.5;
-    }
-
     var next = diff.normalized() * speed;
     position += next;
+
   }
 
   bool isScreenOut(double x, double y) {
@@ -67,13 +62,7 @@ class Missile extends SpriteComponent with HasHitboxes, Collidable {
   }
 
   void reloadSprite() {
-    int ran = random.nextInt(5);
-    isFast = ran == 0;
-    if (isFast) {
-      sprite = fast;
-    } else {
-      sprite = normal;
-    }
+    sprite = clam;
     anchor = Anchor.center;
   }
 
@@ -113,5 +102,14 @@ class Missile extends SpriteComponent with HasHitboxes, Collidable {
     startPosition = Vector2(startX, startY);
     endPosition = Vector2(endX, endY);
     position = Vector2(startX, startY);
+  }
+
+  void takeHit() {
+    reloadPosition();
+    Global.score += 1;
+  }
+
+  void resetComponent() {
+    removeFromParent();
   }
 }

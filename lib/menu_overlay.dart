@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:infinity_alive/game_manager.dart';
-import 'package:infinity_alive/global.dart';
+import 'package:infinity_alive/controller/game_manager.dart';
+import 'package:infinity_alive/config/global.dart';
 
 class MenuOverlay extends StatefulWidget {
   MenuOverlay({Key? key, required this.game}) : super(key: key);
@@ -65,17 +65,12 @@ class _MenuOverlayState extends State<MenuOverlay> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "SPEED : ${Global.gameSpeed}",
-                        style: const TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "MISSILE : ${widget.game.missiles.length}",
+                        "SURVIVAL TIME : ${Global.timer.toStringAsFixed(4)}",
                         style: const TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       const SizedBox(height: 62),
                       Text(
-                        "SCORE : ${Global.score.toStringAsFixed(4)}",
+                        "CLAM SCORE: ${Global.score}",
                         style: const TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ],
@@ -84,7 +79,7 @@ class _MenuOverlayState extends State<MenuOverlay> {
                     children: [
                       const SizedBox(height: 500),
                       Text(
-                        "SCORE : ${Global.score.toStringAsFixed(4)}",
+                        "CLAM SCORE: ${Global.score}",
                         style: const TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ],
@@ -102,6 +97,7 @@ class _MenuOverlayState extends State<MenuOverlay> {
       Global.status = GameStatus.run;
     } else {
       widget.game.restart();
+
     }
     setState(() {});
   }

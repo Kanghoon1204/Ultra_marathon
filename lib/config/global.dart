@@ -7,7 +7,8 @@ class Global {
   static GameStatus status = GameStatus.gameover;
   static int level = 1;
   static double gameSpeed = 100;
-  static double score = 0;
+  static int score = 0;
+  static double timer = 0;
 
   static bool isPause() => status == GameStatus.pause;
   static bool isRun() => status == GameStatus.run;
